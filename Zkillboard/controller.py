@@ -4,7 +4,7 @@ from cachetools import TTLCache
 
 from Discord.bot import logger
 from Esi.controller import get_killmail
-from Zkillboard._config import ZKILL_URL, DEFAULT_HEADERS, TIME_TO_CACHE, MAX_ITEMS
+from Zkillboard.config import ZKILL_URL, DEFAULT_HEADERS, TIME_TO_CACHE, MAX_ITEMS
 
 
 @cached(TTLCache(maxsize=MAX_ITEMS, ttl=TIME_TO_CACHE))
