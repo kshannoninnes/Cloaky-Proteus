@@ -13,7 +13,7 @@ Cloaky Proteus is a discord bot who's sole purpose is to perform a character loo
         python install.py
 
 ## Configuration
-Once environment setup completes, you will need to set up a config file containing a Discord bot token
+Once environment setup completes, you will need to set up a couple config files
    1. Log into the [Discord Developer Portal](https://discordapp.com/developers/applications/)
    2. Create a new Application with whatever name you like (this is not the name that appears in Discord)
    3. Navigate to the "Bot" section in the left menu
@@ -29,8 +29,7 @@ Once environment setup completes, you will need to set up a config file containi
    9.  Configure the bot with a way for CCP to contact you should the bot do something bad
        1.  In Windows, navigate to the Esi directory within the bot's project
        2.  Rename "_config.dist.py" to "_config.py" and open it in your choice of text editor
-       3.  Replace "USER-AGENT-HERE" with some method of contacting you 
-           > eg. `me@example.com`
+       3.  Replace "USER-AGENT-HERE" with your preferred method of being contacted, eg. `"Email: me@example.com"`, `"Discord: me#1234"`, `"EVE Online: MyCharacterName"`, etc
        4.  Save and close the file
 
 ## Run
