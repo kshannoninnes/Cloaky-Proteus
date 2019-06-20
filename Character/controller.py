@@ -8,7 +8,13 @@ from Zkillboard.controller import get_last_killmail
 
 
 async def get_character_id(pilot_name):
-    return await search(pilot_name)
+    pilot_name = pilot_name.strip()
+    strict = pilot_name.startswith('"') and pilot_name.endswith('"')
+    pilot_name = pilot_name.strip('"')
+    if strict:
+        return await search(pilot_name, strict=True)
+    else:
+        return await search(pilot_name)
 
 async def get_character_stats(char_id):
     stats = {}
