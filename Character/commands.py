@@ -13,6 +13,10 @@ class Character(commands.Cog):
         description='EVE Online Character Lookup'
     )
     async def who(self, ctx):
+        """Look up an EVE Online character by name
+
+        Use double quotes to force a strict match.
+        """
         pilot_name = ctx.message.content[len(ctx.prefix) + len(ctx.invoked_with):]
 
         if not len(pilot_name):
