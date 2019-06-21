@@ -1,3 +1,4 @@
+import warnings
 import logging
 import sys
 
@@ -7,6 +8,7 @@ from Discord._config import TOKEN, PREFIX
 
 bot = commands.Bot(command_prefix=PREFIX)
 
+warnings.filterwarnings('ignore', message='Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning')
 
 @bot.event
 async def on_ready():
@@ -29,7 +31,7 @@ async def on_error(event, *args, **kwargs):
         if isinstance(exception, ConnectionError):
             sys.exit(message)
         else:
-            logger.error(message)
+            logger.error(message + ' ' + exception.original.msg)
 
 def _load_logger():
     log = logging.getLogger(__name__)
