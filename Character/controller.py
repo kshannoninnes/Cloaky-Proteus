@@ -1,6 +1,7 @@
 import math
 import asyncio
 from datetime import datetime
+from discord import Embed
 from urllib.parse import quote_plus
 
 from Esi.controller import search, get_character, get_corporation, get_portrait
@@ -36,7 +37,24 @@ async def get_character_stats(char_id):
         'https://evewho.com/pilot/' + quote_plus(stats['name'])
     ]
 
-    return stats
+    return await _build_character_embed(stats)
+
+async def _build_character_embed(character):
+    embed = Embed(
+        title=character['name'],
+        color=184076,
+        description=character['corp']['name']
+    ).set_thumbnail(
+        url=character['portrait']['px512x512']
+    ).add_field(
+        name='Last Active',
+        value=character['activity']
+    ).add_field(
+        name='Links',
+        value='\n'.join(character['links'])
+    )
+
+    return embed
 
 
 async def _school_round(n):
