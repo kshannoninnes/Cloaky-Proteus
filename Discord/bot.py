@@ -14,7 +14,7 @@ warnings.filterwarnings('ignore', message='Using slow pure-python SequenceMatche
 async def on_ready():
     for cog in cogs:
         bot.load_extension(cog)
-    logger.info('Ready!')
+    logger.info('Ready! Press Ctrl-Break to stop.')
 
 @bot.event
 async def on_command(ctx):
