@@ -14,6 +14,9 @@ async def search(query, category='character', strict=False):
 async def get_character(char_id):
     return await _id_op('get_characters_character_id', character_id=char_id)
 
+async def get_all_characters(char_list):
+    return await _id_op('post_universe_names', ids=char_list)
+
 async def get_portrait(char_id):
     return await _id_op('get_characters_character_id_portrait', character_id=char_id)
 

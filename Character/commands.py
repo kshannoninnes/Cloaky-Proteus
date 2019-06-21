@@ -1,6 +1,6 @@
 from discord.ext import commands
 
-from Character.controller import get_character_id, get_character_stats
+from Character.controller import get_character_id, get_closest_match, get_character_stats
 
 
 class Character(commands.Cog):
@@ -22,10 +22,12 @@ class Character(commands.Cog):
         returned = await get_character_id(pilot_name)
         if not returned:
             return await ctx.channel.send('Character not found')
-        elif len(returned['character']) > 1:
-            return await ctx.channel.send('Multiple matches, aborting...')
         else:
-            char_id = returned['character'][0]
+            if len(returned['character']) > 1:
+                char_id = await get_closest_match(pilot_name, returned['character'])
+            else:
+                char_id = returned['character'][0]
+
             character = await get_character_stats(char_id)
 
             return await ctx.channel.send(embed=character)

@@ -3,8 +3,9 @@ import asyncio
 from datetime import datetime
 from discord import Embed
 from urllib.parse import quote_plus
+from fuzzywuzzy import process
 
-from Esi.controller import search, get_character, get_corporation, get_portrait
+from Esi.controller import search, get_character, get_all_characters, get_corporation, get_portrait
 from Zkillboard.controller import get_last_killmail
 
 
@@ -16,6 +17,18 @@ async def get_character_id(pilot_name):
         return await search(pilot_name, strict=True)
     else:
         return await search(pilot_name)
+
+async def get_closest_match(pilot_name, char_list):
+    all_chars = await get_all_characters(char_list)
+    char_names = []
+
+    for char in all_chars:
+        char_names.append(char['name'])
+
+    closest_name = process.extractOne(pilot_name, char_names)
+    closest = next((char for char in all_chars if char['name'] == closest_name[0]), None)
+
+    return closest['id']
 
 async def get_character_stats(char_id):
     stats = {}
