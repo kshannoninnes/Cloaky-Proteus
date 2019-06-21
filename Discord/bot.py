@@ -31,7 +31,11 @@ async def on_error(event, *args, **kwargs):
         if isinstance(exception, ConnectionError):
             sys.exit(message)
         else:
-            logger.error(message + ' ' + exception.original.msg)
+            error_string = message
+            if exception.original:
+                error_string += ' ' + exception.original.msg
+
+            logger.error(error_string)
 
 def _load_logger():
     log = logging.getLogger(__name__)
