@@ -10,12 +10,12 @@ class Character(commands.Cog):
     @commands.command(
         name='who'
     )
-    async def who(self, ctx, *, pilot_name:str):
+    async def who(self, ctx, *, pilot_name:str=None):
         """Look up an EVE Online character by name
 
         Use double quotes to force a strict match. eg. !who "Nosy" will not match a character named Nosy Fucker
         """
-        if len(pilot_name) < 3:
+        if not pilot_name or len(pilot_name) < 3:
             return await ctx.channel.send('Character name too short, 3 characters minimum')
 
         returned = await get_character_id(pilot_name)
