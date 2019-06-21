@@ -16,7 +16,7 @@ class Character(commands.Cog):
 
         Use double quotes to force a strict match.
         """
-        if not len(pilot_name):
+        if len(pilot_name) < 3:
             return await ctx.channel.send('Character name too short, 3 characters minimum')
 
         returned = await get_character_id(pilot_name)
