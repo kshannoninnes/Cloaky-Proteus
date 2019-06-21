@@ -31,26 +31,28 @@ async def get_closest_match(pilot_name, char_list):
     return closest['id']
 
 async def get_character_stats(char_id):
-    stats = {}
+    stats = {'links': []}
 
     character, recent = await asyncio.gather(
         get_character(char_id),
         get_last_killmail(char_id)
     )
-
+    stats['name'] = character['name']
     stats['activity'] = 'Never' if not recent else await _last_active(recent['killmail_time'])
 
-    stats['name'] = character['name']
-    stats['corp'], stats['portrait'] = await asyncio.gather(
+    stats['corp'], stats['portrait'], stats['links'] = await asyncio.gather(
         get_corporation(character['corporation_id']),
-        get_portrait(char_id)
+        get_portrait(char_id),
+        _get_character_links(id=char_id, name=character['name'])
     )
-    stats['links'] = [
-        'https://zkillboard.com/character/' + str(char_id),
-        'https://evewho.com/pilot/' + quote_plus(stats['name'])
-    ]
 
     return await _build_character_embed(stats)
+
+async def _get_character_links(**character):
+    return await asyncio.gather(
+        _build_markdown_hyperlink('Zkillboard', 'https://zkillboard.com/character/' + str(character['id']) + '/'),
+        _build_markdown_hyperlink('Evewho', 'https://evewho.com/pilot/' + quote_plus(character['name']))
+    )
 
 async def _build_character_embed(character):
     embed = Embed(
@@ -64,16 +66,14 @@ async def _build_character_embed(character):
         value=character['activity']
     ).add_field(
         name='Links',
-        value='\n'.join(character['links'])
+        value='\n'.join(character['links']),
+        inline=False
     )
 
     return embed
 
-
-async def _school_round(n):
-    if n - math.floor(n) < 0.5:
-        return math.floor(n)
-    return math.ceil(n)
+async def _build_markdown_hyperlink(text, url):
+    return '[' + text + '](' + url + ')'
 
 
 async def _simplify_timedelta(timedelta, precise=False):
@@ -86,7 +86,6 @@ async def _simplify_timedelta(timedelta, precise=False):
         return result.format(str(math.trunc(hours)) + ' hours ago')
     else:
         return result.format('ago')
-
 
 async def _last_active(last_killmail):
     last_kill = datetime.strptime(last_killmail, '%Y-%m-%dT%H:%M:%SZ')
