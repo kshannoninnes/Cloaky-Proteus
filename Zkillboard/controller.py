@@ -23,8 +23,9 @@ async def get_last_killmail(char_id):
 async def _make_request(uri):
     async with ClientSession(headers=DEFAULT_HEADERS) as session:
         async with session.get(uri) as res:
-            if res.status == 200:
+            if res.status in range(200, 300):
                 return await res.json()
             else:
+                logger.warn('Error retrieving data from zkill')
                 logger.error(res)
                 return None

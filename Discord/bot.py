@@ -40,11 +40,20 @@ async def on_error(event, *args, **kwargs):
 def _load_logger():
     log = logging.getLogger(__name__)
     log.setLevel(logging.DEBUG)
-    handler = logging.StreamHandler(sys.stdout)
-    handler.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setLevel(logging.INFO)
     handler.setFormatter(formatter)
-    log.addHandler(handler)
+
+    filehandler = logging.FileHandler('../cloakyproteus.log')
+    filehandler.setLevel(logging.DEBUG)
+    filehandler.setFormatter(formatter)
+
+    log.handlers = [
+        handler,
+        filehandler
+    ]
 
     return log
 

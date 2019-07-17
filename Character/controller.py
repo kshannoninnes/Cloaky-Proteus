@@ -38,7 +38,7 @@ async def get_character_stats(char_id):
         get_last_killmail(char_id)
     )
     stats['name'] = character['name']
-    stats['activity'] = 'Never' if not recent else await _last_active(recent['killmail_time'])
+    stats['activity'] = 'Unknown' if not recent else await _last_active(recent['killmail_time'])
 
     stats['corp'], stats['portrait'], stats['links'] = await asyncio.gather(
         get_corporation(character['corporation_id']),

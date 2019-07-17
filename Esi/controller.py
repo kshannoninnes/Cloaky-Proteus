@@ -27,6 +27,7 @@ async def get_killmail(kill_id, kill_hash):
     return await _id_op('get_killmails_killmail_id_killmail_hash', killmail_id=kill_id, killmail_hash=kill_hash)
 
 async def _id_op(op_type, **kwargs):
+    logger.debug('Request: ' + op_type + ' : ' + str(kwargs))
     operation = esi.op[op_type](**kwargs)
     result = client.request(operation)
 
@@ -34,11 +35,13 @@ async def _id_op(op_type, **kwargs):
 
 async def _check_result(result):
     valid_dict = json.loads(result.raw.decode('utf-8'))
+    logger.debug('Response: {}'.format(valid_dict))
+    logger.debug('Error limit remaining: {}, error limit resets in: {}'.format(result.header['x-esi-error-limit-remain'], result.header['x-esi-error-limit-reset']))
     if result.status == 200:
         return valid_dict
     else:
         logger.error("{}: {}".format(result.status, valid_dict.get('error')))
-        raise ValueError(valid_dict.get('error', ''))
+        return None
 
 def _load_esi():
     loaded = False
@@ -56,7 +59,7 @@ def _load_esi():
                 return esi_app, esi_client
             except HTTPError:
                 logger.warning('Loading swagger failed ' + str(count) + '/' + str(MAX_RETRY) + ', retrying...')
-                time.sleep(0.3)
+                time.sleep(0.5)
                 pass
         else:
             raise ConnectionError('Error loading swagger. Please restart the bot.')
